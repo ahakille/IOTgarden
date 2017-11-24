@@ -3,10 +3,10 @@
 #define DEBUG true
 #define DHTPIN 7                 
 #define SSID "NETGEAR74"     // "SSID-WiFiname"
-#define PASS "freshmoon280" // "password"
+#define PASS "XX" // "password"
 #define IP "api.thingspeak.com"      // thingspeak.com ip
 
-String msg = "GET /update?key=1VTNA7N0WI2DZBSY"; //Your ThingSpeak API key
+String msg = "GET /update?key=XX"; //Your ThingSpeak API key
 SoftwareSerial esp8266(2,3); //Rx,Tx
 unsigned long lastTimeMillis = 0;
 
