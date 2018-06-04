@@ -34,54 +34,54 @@ void setup()
   pinMode(A5,INPUT);
  // connectWiFi();
   
-  delay(10000);
+  delay(100);
 }
 
 void loop()
 {
 
-	pResistor = analogRead(A5);
+ 	pResistor = analogRead(A5);
     sensors.requestTemperatures();
     Serial.print("Temperature for the device 1 (index 0) is: ");
 	Celcius = sensors.getTempCByIndex(0) - 2.49;
 	Serial.println(Celcius);
 	Serial.println("P= ");
 	Serial.println(pResistor);
-    Serial.println("M= ");
-    Serial.println(SensorValue);
-    delay(1000);
+ //   Serial.println("M= ");
+ //   Serial.println(SensorValue);
+ //   delay(1000);
 	SensorValue = String(analogRead(A0));
     UpdateSensor(1,SensorValue);
 	delay(10000);
 	SensorValue = String(analogRead(A1));
 	UpdateSensor(2, SensorValue);
 	delay(10000);
-	SensorValue = String(analogRead(A2));
-	UpdateSensor(3, SensorValue);
-	delay(10000);
 	SensorValue = String(analogRead(A5));
 	UpdateSensor(4, SensorValue);
 	delay(10000);
 	SensorValue = String(Celcius);
 	UpdateSensor(5, SensorValue);
-  delay(36000);
+  delay(600000);
 }
 
 // POST SENSORVALUE
 void UpdateSensor(int sensorId ,String sensorValue )
 {
+
+	String test = "sensorid=" + sensorId;
+	test += "&sensordata=" + sensorValue;
   String cmd = "AT+CIPSTART=\"TCP\",\"";
   cmd += IP;
   cmd += "\",80";
   Serial.println(cmd);
   esp8266.println(cmd);
-  cmd = msg;
-  cmd += "&sensorid=";    //field 1 for temperature
+  cmd = "GET /api/values/post?key=4uK5damAYHwN8I&sensorid="; 
+   //field 1 for temperature
   cmd += sensorId;
-  cmd += "&sensordata=";    //field 1 for temperature
-  cmd += sensorValue;
-  cmd += " HTTP/1.0";
-  cmd += "\r\n";
+  cmd += "&sensordata=" + sensorValue +" HTTP/1.1\r\n";
+  cmd += "Host: api.nppc.se\r\n";
+  cmd += "Connection: close\r\n\r\n";
+
   delay(200);
   count = cmd.length();
   Serial.println("AT+CIPSEND="+count);
@@ -92,9 +92,10 @@ void UpdateSensor(int sensorId ,String sensorValue )
    
     Serial.println(cmd);
     esp8266.println(cmd);
-
+	printResponse();
  delay(5000);
-
+ esp8266.println("AT+CIPCLOSE");
+ 
 }
 void printResponse() 
 {
